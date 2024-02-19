@@ -10,6 +10,7 @@ set(${PROJECT_NAME}_PATCH_VERSION 0)
 set(${PROJECT_NAME}_VERSION
     ${${POJECT_NAME}_MAJOR_VERSION}.${${POJECT_NAME}_MINOR_VERSION}.${${POJECT_NAME}_PATCH_VERSION})
 
+# TODO: Convert to library after development
 add_executable(${PROJECT_NAME}
     src/wave_function_collapse.cpp)
 target_include_directories(${PROJECT_NAME} PUBLIC
@@ -25,7 +26,7 @@ if (BUILD_TESTING)
     find_package(GTest REQUIRED)
 
     # Test Graph Vertex
-    add_executable(vertex_test test/vertex_test.cpp)
+    add_executable(vertex_test test/graph/vertex_test.cpp)
     target_include_directories(vertex_test PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>)
@@ -33,7 +34,7 @@ if (BUILD_TESTING)
     add_test(NAME vertex_test COMMAND vertex_test)
 
     # Test Graph
-    add_executable(graph_test test/graph_test.cpp)
+    add_executable(graph_test test/graph/graph_test.cpp)
     target_include_directories(graph_test PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>)
