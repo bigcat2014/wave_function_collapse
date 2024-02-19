@@ -1,0 +1,5 @@
+set(wave_function_collapse_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
+
+include("${wave_function_collapse_DIR/export_wave_function_collapse.cmake}")
+
+set(wave_function_collapse_LIBRARIES wave_function_collapse)
