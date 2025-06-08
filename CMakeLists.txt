@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.19)
 project(wave_function_collapse)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 set(${PROJECT_NAME}_MAJOR_VERSION 0)
@@ -10,36 +10,31 @@ set(${PROJECT_NAME}_PATCH_VERSION 0)
 set(${PROJECT_NAME}_VERSION
     ${${POJECT_NAME}_MAJOR_VERSION}.${${POJECT_NAME}_MINOR_VERSION}.${${POJECT_NAME}_PATCH_VERSION})
 
+set(Boost_USE_STATIC_LIBS OFF)
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME OFF)
+find_package(Boost 1.74.0 COMPONENTS graph REQUIRED)
+
 # TODO: Convert to library after development
 add_executable(${PROJECT_NAME}
-    src/wave_function_collapse.cpp)
+    src/wave_function_collapse.cpp
+)
 target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>)
+    $<INSTALL_INTERFACE:include>
+    ${Boost_INCLUDE_DIRS}
+)
+target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 
 install(
     DIRECTORY include/
-    DESTINATION include)
+    DESTINATION include
+)
 
 include(CTest)
+enable_testing()
 if (BUILD_TESTING)
     find_package(GTest REQUIRED)
-
-    # Test Graph Vertex
-    add_executable(vertex_test test/graph/vertex_test.cpp)
-    target_include_directories(vertex_test PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include>)
-    target_link_libraries(vertex_test PRIVATE GTest::gtest)
-    add_test(NAME vertex_test COMMAND vertex_test)
-
-    # Test Graph
-    add_executable(graph_test test/graph/graph_test.cpp)
-    target_include_directories(graph_test PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include>)
-    target_link_libraries(graph_test PRIVATE GTest::gtest)
-    add_test(NAME graph_test COMMAND graph_test)
 endif()
 
 install(
@@ -70,3 +65,7 @@ install(EXPORT export_${PROJECT_NAME}
     DESTINATION "share/${PROJECT_NAME}/cmake"
     FILE export_${PROEJCT_NAME}.cmake
     COMPONENT dev)
+
+set(CPACK_PROJECT_NAME ${PROJECT_NAME})
+set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
+include(CPack)
