@@ -15,9 +15,8 @@ set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 find_package(Boost 1.74.0 REQUIRED COMPONENTS graph)
 
-# TODO: Convert to library after development
 add_executable(${PROJECT_NAME}
-    src/wave_function_collapse.cpp
+    src/wfc_example.cpp
 )
 target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
