@@ -38,7 +38,6 @@ template <typename T>
 struct BoardVertexData {
   std::vector<
       typename tmpRelationships<T>::vertex_descriptor> mutable potentialStates;
-  bool mutable collapsed = false;
   unsigned entropy() const { return potentialStates.size(); };
 };
 
@@ -235,7 +234,7 @@ void printBoard(tmpBoard<T>& B) {
   auto vpair = vertices(B);
   for (auto iter = vpair.first; iter != vpair.second; iter++) {
     std::cout << "vertex: " << *iter;
-    if (B[*iter].collapsed) {
+    if (B[*iter].potentialStates.size() == 1) {
       std::cout << " data: " << B[*iter].potentialStates[0];
     }
     std::cout << " entropy: " << B[*iter].entropy() << std::endl;
@@ -261,7 +260,7 @@ class BFSWFCVisitor : public boost::default_bfs_visitor {
   BFSWFCVisitor(const tmpRelationships<T>& R) : m_relationships(R) {}
   template <typename Vertex, typename Graph>
   void discover_vertex(Vertex currentVertex, Graph& G) {
-    if (G[currentVertex].collapsed) {
+    if (G[currentVertex].potentialStates.size() == 1) {
       // std::cout << "Vertex " << currentVertex << " already collapsed.
       // Skipping."
       //           << std::endl;
@@ -316,9 +315,6 @@ class BFSWFCVisitor : public boost::default_bfs_visitor {
     // Set current vertex potential states to compatible states
     G[currentVertex].potentialStates =
         std::vector(compatibleStates.begin(), compatibleStates.end());
-    if (G[currentVertex].entropy() == 1) {
-      G[currentVertex].collapsed = true;
-    }
   }
 
  private:
@@ -342,7 +338,6 @@ template <typename T>
 void collapse(tmpBoard<T>& B, const tmpRelationships<T>& R,
               const typename tmpBoard<T>::vertex_descriptor bV,
               const typename tmpRelationships<T>::vertex_descriptor rV) {
-  B[bV].collapsed = true;
   B[bV].potentialStates = {rV};
 
   // updateNeighbors<T>(B, R, bV);
