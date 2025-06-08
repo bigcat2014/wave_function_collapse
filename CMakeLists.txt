@@ -13,7 +13,7 @@ set(${PROJECT_NAME}_VERSION
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
-find_package(Boost 1.74.0 COMPONENTS graph REQUIRED)
+find_package(Boost 1.74.0 REQUIRED COMPONENTS graph)
 
 # TODO: Convert to library after development
 add_executable(${PROJECT_NAME}

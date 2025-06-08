@@ -16,7 +16,8 @@ struct RelVertexData {
 
 template <typename T>
 struct BoardVertexData : public RelVertexData<T> {
-  unsigned entropy;
+  std::vector<RelVertexData&> potential_states;
+  void entropy() { return potential_states.size(); };
 };
 
 struct EdgeData {
